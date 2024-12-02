@@ -13,9 +13,9 @@ jobs:
       -
         name: Clone Repo
         uses: actions/checkout@v4
-      -
-        name: re-confirm a build
-        run: bazel run //docs:collate_docs
+      #-
+      #  name: re-confirm a build
+      #  run: bazel run //docs:collate_docs
 
   release:
     runs-on: ubuntu-latest
@@ -32,28 +32,46 @@ jobs:
         # - enable "Allow Github Actions to create and approve pull requests"
         id: release
         with:
-          release-type: simple
+          release-type: bazel
       -
         name: Clone Repo
         if: ${{ steps.release.outputs.release_created }}
         uses: actions/checkout@v4
       -
-        name: Really truly no V in version
-        id: version
+        name: Canonicalize Parameters
+        id: params
         if: ${{ steps.release.outputs.release_created }}
-        run: echo "::set-output name=semver::$(echo ${{ steps.release.outputs.tag_name }} | sed -e 's/^v//g')"
+        run: |
+          echo "::set-output name=semver::$(echo ${{ steps.release.outputs.tag_name }} | sed -e 's/^v//g')"
+          echo "::set-output name=name::$(echo ${GITHUB_REPOSITORY} | cut -d / -f 2)"
+          echo "::set-output name=prefix::$(echo ${{ env.GITHUB_REPOSITORY }} | cut -d / -f 2)-${{ steps.release.outputs.tag_name }}"
+          echo "::set-output name=tag_name::${{ steps.release.outputs.tag_name }}"
+      -
+        name: Dump Env
+        env:
+          NPREFIX: ${{ steps.params.outputs.prefix }}
+          NNAME: ${{ steps.params.outputs.name }}
+          NTAG: ${{ steps.params.outputs.tag_name }}
+        id: env
+        run: env | sort
       -
         name: Cut Size-Optimized Archive
         env:
-          PREFIX: rules_synology-${{ steps.version.outputs.semver }}
+          PREFIX: rules_synology-${{ steps.release.outputs.tag_name }}
+          NPREFIX: ${{ steps.params.outputs.prefix }}
+          NNAME: ${{ steps.params.outputs.name }}
+          NTAG: ${{ steps.params.outputs.tag_name }}
         if: ${{ steps.release.outputs.release_created }}
         run: git archive --format=tar --prefix=${PREFIX}/ $(git log -1 --format=%H) | xz -c9 > ${PREFIX}.tar.xz
       -
         name: Upload Size-Optimized Archive
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PREFIX: rules_synology-${{ steps.version.outputs.semver }}
+          PREFIX: rules_synology-${{ steps.release.outputs.tag_name }}
           TAG: ${{ steps.release.outputs.tag_name }}
+          NNAME: ${{ steps.params.outputs.name }}
+          NPREFIX: ${{ steps.params.outputs.prefix }}
+          NTAG: ${{ steps.params.outputs.tag_name }}
         if: ${{ steps.release.outputs.release_created }}
         run: gh release upload ${TAG} ${PREFIX}.tar.xz
       -
