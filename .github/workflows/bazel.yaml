@@ -26,7 +26,16 @@ jobs:
         # action runners have bazelisk: - uses: bazelbuild/setup-bazelisk@v2
         # https://github.com/bazelbuild/bazel/issues/11062
       - run: mkdir -p "${TEST_TMPDIR}"
-      - run: env | sort
+      -
+        name: Canonicalize Parameters
+        id: params
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          echo "::set-output name=semver::$(echo ${{ steps.release.outputs.tag_name }} | sed -e 's/^v//g')"
+          echo "::set-output name=name::$(echo ${GITHUB_REPOSITORY} | cut -d / -f 2)"
+          echo "::set-output name=prefix::$(echo ${{ env.GITHUB_REPOSITORY }} | cut -d / -f 2)-${{ steps.release.outputs.tag_name }}"
+          echo "::set-output name=tag_name::${{ steps.release.outputs.tag_name }}"
+          env | sort
       - name: Mount bazel cache  # Optional
         uses: actions/cache@v4
         with:
