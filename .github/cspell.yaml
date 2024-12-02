@@ -1,0 +1,66 @@
+---
+# cSpell Settings
+
+version: "0.2"
+
+# flagWords - list of words to be always considered incorrect
+# This is useful for offensive words and common spelling errors.
+# For example "hte" should be "the"
+flagWords:
+  - hte
+
+language: en
+
+# words - list of words to be always considered correct: an Allowlist per-se
+words:
+  # Synology terms and Architecture name
+  - Denverton
+  - startable
+  - syno
+  # bazel words
+  - Stardoc
+  - bazel
+  - bazelisk
+  - bazelrc
+  - bazelspk
+  - buildifier
+  - bzlmod
+  - bzlmodify
+  - ibazel
+  - presubmit
+  - rulesets
+  # Vanity
+  - allanc
+  - buildfail
+  - chickenandpork
+  - floppydog
+  - looooong
+  # Other entity proper names
+  - FireHydrant
+  - ThirdParty
+  - RobertRoss
+  - cryptobot
+  # Actual useful words
+  - Automerge
+  - BUILDNUM
+  - buildable
+  - configfile
+  - crossbuild
+  - crosstool
+  - dockcross
+  - hardlinks
+  - helloworld
+  - golines
+  - kernelmod
+  - maint
+  - mkdocs
+  - mktemp
+  - netfilter
+  - noarch
+  - proto
+  - softlink
+  - softlinks
+  - subdir
+  - subdirs
+  - tmpfs
+  - varargs

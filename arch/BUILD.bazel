@@ -1,0 +1,43 @@
+load("//toolchains:deps.bzl", TOOLCHAINS = "TOOLCHAINS_SHORT_LC")
+
+# This BUILD file is simply a namespace separation so that we can show "//arch:denverton" as
+# something that makes sense to more Synology people than bog-standard Bazel people.
+#
+# All changes are made in the toolchains in the toolchains/deps.bzl and accessed via
+# toolchains/extension.bzl in a MODULE.bazel file
+#
+# DO NOT create new targets in the directory; it's a namespace only
+#
+# from toolchains/deps.bzl, TOOLCHAINS gets generated value such as ["denverton", "geminilake"]
+#
+# to check current values:
+# bazel query @rules_synology//arch/...
+#    @rules_synology//arch:arm  <-- to be removed
+#    @rules_synology//arch:denverton
+#    @rules_synology//arch:geminilake
+#    @rules_synology//arch:synology_arch  <-- to be removed
+#    @rules_synology//arch:x86  <-- to be removed
+
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+config_setting(
+    name = "arm",
+    values = {"cpu": "arm"},
+)
+
+constraint_setting(
+    # effectively an ENUM TYPE
+    name = "synology_arch",
+)
+
+# to check: bazel query 'kind("constraint_value", @rules_synology//arch/...)'
+[constraint_value(
+    name = a,
+    constraint_setting = "synology_arch",
+    visibility = ["//visibility:public"],
+) for a in TOOLCHAINS]
+
+filegroup(
+    name = "all_arch",
+    srcs = [":{}".format(a) for a in TOOLCHAINS],
+)

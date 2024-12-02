@@ -1,0 +1,16 @@
+module(
+    name = "examples_cross-helloworld-no-go",
+    version = "1.0",
+)
+
+bazel_dep(name = "aspect_bazel_lib", version = "2.9.3")
+bazel_dep(name = "rules_synology")
+
+# When reusing for your own project, don't use this local-override
+local_path_override(
+    module_name = "rules_synology",
+    path = "../..",
+)
+
+# register toolchains by wildcard :) (thanks, github/cameron-martin)
+register_toolchains("@rules_synology//toolchains:all")

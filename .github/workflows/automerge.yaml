@@ -1,0 +1,35 @@
+name: automerge
+
+# https://github.com/ridedott/merge-me-action/discussions/997#discussioncomment-3166077
+# yamllint disable-line rule:truthy
+on:
+  check_suite:
+    conclusion: success
+    # status: {}  # check_events only listenable in main/master branch in github app
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    # https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#enable-auto-merge-on-a-pull-request
+    # permissions: write-all
+    permissions:
+      checks: read
+      contents: write
+      pull-requests: write
+      ## actions: read|write|none
+      # checks: write
+      # contents: write
+    steps:
+      - id: automerge
+        name: automerge
+        uses: "pascalgn/automerge-action@v0.16.4"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          MERGE_LABELS: "!wip"
+          MERGE_METHOD_LABELS: "automerge=merge,autosquash=squash"
+          MERGE_METHOD_LABEL_REQUIRED: true
+          MERGE_COMMIT_MESSAGE: "pull-request-description"
+          MERGE_RETRIES: "10"
+          MERGE_RETRY_SLEEP: "30000"
+          MERGE_REQUIRED_APPROVALS: "0"
+          UPDATE_LABELS: ""
+          UPDATE_METHOD: "rebase"

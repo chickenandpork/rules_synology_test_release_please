@@ -1,0 +1,76 @@
+toolchain(
+    name = "arm64_gcc_linux_x86_64",
+    # registered in //toolchains:deps.bzl imported by //:deps.bzl
+    exec_compatible_with = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+    target_compatible_with = [
+        "@platforms//cpu:arm64",
+    ],
+    toolchain = "@arm64_gcc_linux_x86_64//:cc_toolchain",
+    toolchain_type = "@rules_cc//cc:toolchain_type",
+)
+
+platform(
+    name = "toolchain_arm64_gcc",
+    constraint_values = [
+        "@platforms//cpu:arm64",
+    ],
+)
+
+toolchain(
+    name = "armada37xx-gcc850_glibc226_armv8-GPL",
+    # registered in //toolchains:deps.bzl imported by //:deps.bzl
+    exec_compatible_with = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+    target_compatible_with = [
+        "@rules_synology//arch:armada37xx",
+        "@rules_synology//dsm:7.1",
+    ],
+    toolchain = "@armada37xx-gcc850_glibc226_armv8-GPL//:cc_toolchain",
+    toolchain_type = "@rules_cc//cc:toolchain_type",
+    visibility = ["//visibility:public"],
+)
+
+toolchain(
+    name = "denverton-gcc850_glibc226_x86_64-GPL",
+    # registered in //toolchains:deps.bzl imported by //:deps.bzl
+    exec_compatible_with = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+    target_compatible_with = [
+        "@rules_synology//arch:denverton",
+        "@rules_synology//dsm:7.1",
+    ],
+    toolchain = "@denverton-gcc850_glibc226_x86_64-GPL//:cc_toolchain",
+    toolchain_type = "@rules_cc//cc:toolchain_type",
+    visibility = ["//visibility:public"],
+)
+
+toolchain(
+    name = "geminilake-gcc850_glibc226_x86_64-GPL",
+    # registered in //toolchains:deps.bzl imported by //:deps.bzl
+    exec_compatible_with = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+    target_compatible_with = [
+        "@rules_synology//arch:geminilake",
+        "@rules_synology//dsm:7.1",
+    ],
+    toolchain = "@geminilake-gcc850_glibc226_x86_64-GPL//:cc_toolchain",
+    toolchain_type = "@rules_cc//cc:toolchain_type",
+)
+
+filegroup(
+    name = "all_toolchains",
+    srcs = [
+        ":armada37xx-gcc850_glibc226_armv8-GPL",
+        ":denverton-gcc850_glibc226_x86_64-GPL",
+        ":geminilake-gcc850_glibc226_x86_64-GPL",
+    ],
+)

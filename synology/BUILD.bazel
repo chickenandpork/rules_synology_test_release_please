@@ -1,0 +1,69 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load("@bazel_skylib//rules:write_file.bzl", "write_file")
+load("@com_github_aignas_rules_shellcheck//:def.bzl", "shellcheck_test")
+load(":info-file.bzl", "info_file")
+load(":infofile_test.bzl", "syno_test_suite")
+
+# I personally go back-and-forth about dozens of little files, or files here-doc'd into the build
+# logic.  Clearly, this is here-doc'd, but I can't promise consistency.
+write_file(
+    name = "stub_script",
+    out = "stub.sh",
+    content = [
+        "#!/bin/sh",
+        """# per DSM_Developer_Guide_7_enu.pdf p53 "scripts", "the simplest implementation of script is just""",
+        """# doing nothing".""",
+        "",
+        "exit 0",
+        "",
+    ],
+    is_executable = True,
+    visibility = ["//visibility:public"],
+)
+
+write_file(
+    name = "stub_sss_script",
+    out = "stub_sss.sh",
+    content = [
+        "#!/bin/sh",
+        "",
+        """case "$1" in""",
+        """    start)""",
+        """        ;;""",
+        """    stop)""",
+        """        ;;""",
+        """    status)""",
+        """        ;;""",
+        """esac""",
+        "",
+        "exit 0",
+        "",
+    ],
+    is_executable = True,
+    visibility = ["//visibility:public"],
+)
+
+[shellcheck_test(
+    name = "shellcheck_{}_test".format(f),
+    data = [":{}".format(f)],
+    tags = ["lint"],
+) for f in [
+    "stub_script",
+    "stub_sss_script",
+]]
+
+bzl_library(
+    name = "docs",
+    srcs = glob(["*.bzl"]),
+    #visibility = ["//doc:__pkg__"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@aspect_bazel_lib//lib:expand_template",
+        "@bazel_skylib//rules:copy_file",
+        "@rules_pkg//pkg:bzl_srcs",
+    ],
+)
+
+# Call a macro that defines targets that perform the tests at analysis time,
+# and that can be executed with "bazel test" to return the result.
+syno_test_suite(name = "myrules_test")

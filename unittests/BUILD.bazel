@@ -1,0 +1,9 @@
+load("//:defs.bzl", "images", "info_file", "maintainer", "protocol_file", "resource_config", "service_config")
+
+# A generic maintainer to drop into other tests
+maintainer(
+    name = "manny",
+    maintainer_name = "Manuel the Maintainer",
+    maintainer_url = "http://i-fix-things.com/manny",
+    visibility = ["//visibility:public"],
+)

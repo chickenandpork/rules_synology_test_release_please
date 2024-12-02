@@ -1,0 +1,8 @@
+load("@rules_synology//:defs.bzl", "confirm_binary_matches_platform")
+
+cc_binary(
+    name = "main",
+    srcs = ["main.cc"],
+)
+
+confirm_binary_matches_platform(":main")

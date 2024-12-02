@@ -1,0 +1,16 @@
+load("//config:platforms.bzl", VERSIONS = "MINOR_VERSIONS")
+
+constraint_setting(
+    name = "dsm_rel_majmin",
+)
+
+[constraint_value(
+    name = v,
+    constraint_setting = ":dsm_rel_majmin",
+    visibility = ["//visibility:public"],
+) for v in VERSIONS]
+
+filegroup(
+    name = "all_dsm",
+    srcs = [":{}".format(v) for v in VERSIONS],
+)
