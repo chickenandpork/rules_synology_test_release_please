@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.1](https://github.com/chickenandpork/rules_synology_test_release_please/compare/v0.0.1...v0.0.1) (2024-12-07)
+
+
+### Features
+
+* extend example to demo repairs ([905a11f](https://github.com/chickenandpork/rules_synology_test_release_please/commit/905a11fe1dd87af3efa9e00c2739390f73d643a0))
+* replicate failure in rules_synology ([3543a43](https://github.com/chickenandpork/rules_synology_test_release_please/commit/3543a4331fdfecf6b5d8cc17941b15a6aca73c09))
+
 ## 0.0.1 (2024-12-02)
 
 
